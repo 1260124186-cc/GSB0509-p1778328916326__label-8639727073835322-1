@@ -94,10 +94,14 @@ const handleEdit = (row) => {
 
 const handleDelete = (id) => {
   ElMessageBox.confirm('确定删除此老人信息吗？', '警告', { type: 'warning' }).then(async () => {
-    await request.delete(`/elderly/delete/${id}`)
-    ElMessage.success('删除成功')
-    loadData()
-  })
+    try {
+      await request.delete(`/elderly/delete/${id}`)
+      ElMessage.success('删除成功')
+      loadData()
+    } catch (error) {
+      ElMessage.error('删除失败')
+    }
+  }).catch(() => {})
 }
 
 const handleSave = async () => {
