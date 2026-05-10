@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: smart-elderly-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: smart_elderly
+    ports:
+      - "33207:3306"
+    volumes:
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - mysql_data:/var/lib/mysql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    networks:
+      - smart-network
+
+  backend:
+    build: ./backend
+    container_name: smart-elderly-backend
+    ports:
+      - "8207:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/smart_elderly?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - db
+    networks:
+      - smart-network
+
+  frontend:
+    build: ./frontend
+    container_name: smart-elderly-frontend
+    ports:
+      - "3207:80"
+    depends_on:
+      - backend
+    networks:
+      - smart-network
+
+networks:
+  smart-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
