@@ -33,7 +33,10 @@ public class ElderlyController {
 
     @DeleteMapping("/delete/{id}")
     public Result<String> delete(@PathVariable Integer id) {
-        elderlyService.removeById(id);
+        boolean success = elderlyService.removeById(id);
+        if (!success) {
+            return Result.error("删除失败，老人不存在");
+        }
         return Result.success("删除成功");
     }
 }

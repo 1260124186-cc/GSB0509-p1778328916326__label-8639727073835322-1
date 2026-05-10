@@ -94,21 +94,29 @@ const handleEdit = (row) => {
 
 const handleDelete = (id) => {
   ElMessageBox.confirm('确定删除此老人信息吗？', '警告', { type: 'warning' }).then(async () => {
-    await request.delete(`/elderly/delete/${id}`)
-    ElMessage.success('删除成功')
-    loadData()
-  })
+    try {
+      await request.delete(`/elderly/delete/${id}`)
+      ElMessage.success('删除成功')
+      loadData()
+    } catch (error) {
+      console.error('删除失败:', error)
+    }
+  }).catch(() => {})
 }
 
 const handleSave = async () => {
-  if (form.value.id) {
-    await request.put('/elderly/update', form.value)
-  } else {
-    await request.post('/elderly/add', form.value)
+  try {
+    if (form.value.id) {
+      await request.put('/elderly/update', form.value)
+    } else {
+      await request.post('/elderly/add', form.value)
+    }
+    ElMessage.success('操作成功')
+    dialogVisible.value = false
+    loadData()
+  } catch (error) {
+    console.error('保存失败:', error)
   }
-  ElMessage.success('操作成功')
-  dialogVisible.value = false
-  loadData()
 }
 </script>
 

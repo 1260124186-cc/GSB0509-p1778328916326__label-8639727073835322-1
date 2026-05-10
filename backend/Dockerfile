@@ -1,5 +1,5 @@
 # 构建阶段
-FROM maven:3.9-eclipse-temurin-17-alpine AS build
+FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /app
 
 # 1. 拷贝 settings.xml
@@ -17,8 +17,8 @@ COPY src ./src
 # 🚀 关键修改：打包时也加上 -s 参数，以防万一
 RUN mvn -s /usr/share/maven/ref/settings.xml package -DskipTests
 
-# 运行阶段 (这部分没问题)
-FROM eclipse-temurin:17-jre-alpine
+# 运行阶段
+FROM eclipse-temurin:17-jre
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
