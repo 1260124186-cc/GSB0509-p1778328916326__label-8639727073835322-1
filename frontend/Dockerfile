@@ -1,5 +1,5 @@
-# 构建阶段
-FROM node:20-alpine AS builder
+# 构建阶段 - 使用镜像代理
+FROM dockerproxy.com/library/node:20-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm config set registry https://registry.npmmirror.com
@@ -7,8 +7,8 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-# 生产阶段
-FROM nginx:alpine
+# 生产阶段 - 使用镜像代理
+FROM dockerproxy.com/library/nginx:alpine
 COPY --from=builder /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80

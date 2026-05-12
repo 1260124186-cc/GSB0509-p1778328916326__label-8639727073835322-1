@@ -1,5 +1,5 @@
-# 构建阶段
-FROM maven:3.9-eclipse-temurin-17-alpine AS build
+# 构建阶段 - 使用镜像代理
+FROM dockerproxy.com/library/maven:3.9-eclipse-temurin-17-alpine AS build
 WORKDIR /app
 
 # 1. 拷贝 settings.xml
@@ -17,8 +17,8 @@ COPY src ./src
 # 🚀 关键修改：打包时也加上 -s 参数，以防万一
 RUN mvn -s /usr/share/maven/ref/settings.xml package -DskipTests
 
-# 运行阶段 (这部分没问题)
-FROM eclipse-temurin:17-jre-alpine
+# 运行阶段 - 使用镜像代理
+FROM dockerproxy.com/library/eclipse-temurin:17-jre-alpine
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
