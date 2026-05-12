@@ -21,19 +21,31 @@ public class ElderlyController {
 
     @PostMapping("/add")
     public Result<String> add(@RequestBody Elderly elderly) {
-        elderlyService.save(elderly);
-        return Result.success("添加成功");
+        boolean success = elderlyService.save(elderly);
+        if (success) {
+            return Result.success("添加成功");
+        } else {
+            return Result.error("添加失败");
+        }
     }
 
     @PutMapping("/update")
     public Result<String> update(@RequestBody Elderly elderly) {
-        elderlyService.updateById(elderly);
-        return Result.success("修改成功");
+        boolean success = elderlyService.updateById(elderly);
+        if (success) {
+            return Result.success("修改成功");
+        } else {
+            return Result.error("修改失败，老人信息不存在");
+        }
     }
 
     @DeleteMapping("/delete/{id}")
     public Result<String> delete(@PathVariable Integer id) {
-        elderlyService.removeById(id);
-        return Result.success("删除成功");
+        boolean success = elderlyService.removeById(id);
+        if (success) {
+            return Result.success("删除成功");
+        } else {
+            return Result.error("删除失败，老人信息不存在");
+        }
     }
 }

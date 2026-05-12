@@ -92,13 +92,17 @@ const handleSave = async () => {
     ElMessage.warning('请选择老人')
     return
   }
-  await request.post('/health/add', healthForm.value)
-  if (healthForm.value.temperature > 37.3) {
-      ElMessage.error('警告：体温异常！已自动标记。')
-  } else {
-      ElMessage.success('保存成功')
+  try {
+    await request.post('/health/add', healthForm.value)
+    if (healthForm.value.temperature > 37.3) {
+        ElMessage.error('警告：体温异常！已自动标记。')
+    } else {
+        ElMessage.success('保存成功')
+    }
+    loadHistory()
+  } catch (error) {
+    console.error('保存失败:', error)
   }
-  loadHistory()
 }
 </script>
 

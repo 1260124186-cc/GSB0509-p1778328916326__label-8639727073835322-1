@@ -101,14 +101,18 @@ const handleDelete = (id) => {
 }
 
 const handleSave = async () => {
-  if (form.value.id) {
-    await request.put('/elderly/update', form.value)
-  } else {
-    await request.post('/elderly/add', form.value)
+  try {
+    if (form.value.id) {
+      await request.put('/elderly/update', form.value)
+    } else {
+      await request.post('/elderly/add', form.value)
+    }
+    ElMessage.success('操作成功')
+    dialogVisible.value = false
+    loadData()
+  } catch (error) {
+    console.error('操作失败:', error)
   }
-  ElMessage.success('操作成功')
-  dialogVisible.value = false
-  loadData()
 }
 </script>
 
