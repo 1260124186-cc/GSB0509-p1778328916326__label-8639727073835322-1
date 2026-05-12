@@ -21,7 +21,11 @@ public class HealthRecordController {
 
     @PostMapping("/add")
     public Result<String> add(@RequestBody HealthRecord record) {
-        healthRecordService.saveRecord(record);
-        return Result.success("记录保存成功");
+        boolean success = healthRecordService.saveRecord(record);
+        if (success) {
+            return Result.success("记录保存成功");
+        } else {
+            return Result.error("记录保存失败");
+        }
     }
 }
